@@ -1,0 +1,40 @@
+{
+	"id": 16996840,
+	"name": "Network Bandwidth >90%  {{site.name}}",
+	"type": "query alert",
+	"query": "avg(last_15m):max:snmp.ifBandwidthInUsage.rate{*} by {site,snmp_host,interface,interface_alias} > 95",
+	"message": "{{#is_alert}}\n🚨 **{{site.name}} Performance Degradation Detected**\n\nInbound bandwidth on **{{snmp_host.name}} → {{interface.name}}** is above **90%**.\n\n{{#is_match \"interface_alias.name\" \"iscsi\" \"storage\"}}\n💾 **Storage Path Impact** — check the [Proxmox Dashboard](https://app.datadoghq.com/dashboard/twb-arm-4eu/proxmox-dc)\n{{/is_match}}\n\n{{#is_match \"interface_alias.name\" \"isp\"}}\n📡 **ISP Uplink Saturated** — check the [Switch Dashboard](https://app.datadoghq.eu/dashboard/xbi-874-2pj/dell-snmp-switch)\n{{/is_match}}\n\n{{#is_match \"interface_alias.name\" \"upstream\" \"pve\"}}\n🖥️ **Server Uplink Constrained** — see the [Proxmox Dashboard](https://app.datadoghq.com/dashboard/twb-arm-4eu/proxmox-dc)\n{{/is_match}}\n\n{{#is_match \"interface_alias.name\" \"management\" \"mgmt\"}}\n🛠️ **Management Interface Impact** — internal only\n{{/is_match}}\n\n{{/is_alert}}\n\n{{#is_recovery}}\n✅ Traffic on **{{snmp_host.name}} → {{interface.name}}** has returned to normal.\n{{/is_recovery}}\n\n@slack-sre_monitoring",
+	"tags": [
+		"team:core-infra",
+		"integration:snmp"
+	],
+	"options": {
+		"thresholds": {
+			"critical": 95,
+			"warning": 90
+		},
+		"notify_audit": false,
+		"include_tags": true,
+		"new_group_delay": 60,
+		"notification_preset_name": "hide_query",
+		"on_missing_data": "default"
+	},
+	"priority": 1,
+	"restriction_policy": {
+		"bindings": [
+			{
+				"relation": "editor",
+				"principals": [
+					"team:10115614-b1a7-4ae1-9e4c-8377342f0258",
+					"user:2936a536-0d5e-11ef-8e76-4e85cf539679"
+				]
+			},
+			{
+				"relation": "viewer",
+				"principals": [
+					"org:fa96d820-7736-11ee-aa93-da7ad0900005"
+				]
+			}
+		]
+	}
+}

@@ -1,0 +1,28 @@
+{{#is_alert}}
+🚨 **{{site.name}} Performance Degradation Detected**
+
+Inbound bandwidth on **{{snmp_host.name}} → {{interface.name}}** is above **90%**.
+
+{{#is_match "interface_alias.name" "iscsi" "storage"}}
+💾 **Storage Path Impact** — check the [Filter by {{site.name}}](https://app.datadoghq.com/dashboard/twb-arm-4eu/proxmox-dc?fromUser=true&refresh_mode=paused&tpl_var_region%5B0%5D=sx-fr1&from_ts=1763671984875&to_ts=1763675584875&live=false&tile_focus=1353187433182248)
+{{/is_match}}
+
+{{#is_match "interface_alias.name" "isp"}}
+📡 **ISP Uplink Saturated** — check the [Filter by {{site.name}}](https://app.datadoghq.eu/dashboard/xbi-874-2pj/dell-snmp-switch?fromUser=false&refresh_mode=paused&from_ts=1763502855406&to_ts=1763675655406&live=false&tile_focus=7394512842416410)
+{{/is_match}}
+
+{{#is_match "interface_alias.name" "upstream" "pve"}}
+🖥️ **Server Uplink Constrained** — see the [Filter by {{site.name}} ](https://app.datadoghq.com/dashboard/twb-arm-4eu/proxmox-dc)
+{{/is_match}}
+
+{{#is_match "interface_alias.name" "management" "mgmt"}}
+🛠️ **Management Interface Impact** — internal only
+{{/is_match}}
+
+{{/is_alert}}
+
+{{#is_recovery}}
+✅ Traffic on **{{snmp_host.name}} → {{interface.name}}** has returned to normal.
+{{/is_recovery}}
+
+@slack-sre-notifications

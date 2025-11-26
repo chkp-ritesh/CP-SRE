@@ -1,0 +1,124 @@
+{{#is_alert}}
+🚨 **BGP SESSION DOWN**
+Device: **{{snmp_host.name}}**
+Peer IP: **{{dell_os10bgp4_v2_peer_description.name}}**
+Remote ASN: **{{dell_os10bgp4_v2_peer_remote_as.name}}**
+Time: {{timestamp}}
+
+━━━━━━━━━━━━━━━━━━
+🧩 **BGP Peer Provider Identification**
+━━━━━━━━━━━━━━━━━━
+
+
+{{!-- CheckPoint --}}
+{{#is_match "dell_os10bgp4_v2_peer_remote_as.name" "398391" "213176"}}
+🌐 ** Internal BGP Down (AS398391 AS213176)**
+- CheckPoint Internal BGP
+- NOC:
+- Monitoring:
+Provide: device name, peer IP, timestamp, circuit ID.
+{{/is_match}}
+
+
+{{!-- Bezeq --}}
+{{#is_match "dell_os10bgp4_v2_peer_remote_as.name" "8551"}}
+🌐 **Bezeq (AS8551)**
+- Phone : 03-9203121
+- Customer number - 102366941
+- Support: hosting@bezeqint.co.il
+Provide peer IP + region.
+{{/is_match}}
+
+{{!-- CellCom --}}
+{{#is_match "dell_os10bgp4_v2_peer_remote_as.name" "1680"}}
+🌐 **Cellcom (AS1680)**
+- Phone : 1-800-821821
+- Support: AVIAR@cellcom.co.il
+Provide peer IP + region.
+{{/is_match}}
+
+
+{{!-- ZAYO --}}
+{{#is_match "dell_os10bgp4_v2_peer_remote_as.name" "6461"}}
+🌐 **Zayo (AS6461)**
+- Global backbone provider
+- NOC: noc@zayo.com / +1-866-236-2824
+- Portal: https://www.zayo.com
+Provide: device name, peer IP, timestamp, circuit ID.
+{{/is_match}}
+
+{{!-- LUMEN / LEVEL3 --}}
+{{#is_match "dell_os10bgp4_v2_peer_remote_as.name" "3356"}}
+🌐 **Lumen / Level(3) (AS3356)**
+- Tier-1 global backbone
+- Support: https://www.lumen.com/help
+- NOC: tickets@centurylink.com
+Include: peer IP, time, circuit.
+{{/is_match}}
+
+{{#is_match "dell_os10bgp4_v2_peer_remote_as.name" "209"}}
+🌐 **Lumen (Legacy AS209)**
+Same support contacts as AS3356.
+{{/is_match}}
+
+{{!-- HURRICANE ELECTRIC --}}
+{{#is_match "dell_os10bgp4_v2_peer_remote_as.name" "6939"}}
+🌐 **Hurricane Electric (AS6939)**
+- Backbone & IPv6 leader
+- NOC: noc@he.net / +1-510-580-4100
+- Portal: https://ip.he.net
+Provide peer IP + traceroute when opening tickets.
+{{/is_match}}
+
+{{!-- EQUINIX (IX / METAL) --}}
+{{#is_match "dell_os10bgp4_v2_peer_remote_as.name" "24115"}}
+🌐 **Equinix IX (AS24115)**
+- IX or virtual fabric peer
+- Support: support@equinix.com
+- Portal: https://metal.equinix.com
+Provide: region, peer IP.
+{{/is_match}}
+
+{{#is_match "dell_os10bgp4_v2_peer_remote_as.name" "19551"}}
+🌐 **Equinix Metal (AS19551)**
+Same support as AS24115.
+{{/is_match}}
+
+
+{{!-- PCCW GLOBAL --}}
+{{#is_match "dell_os10bgp4_v2_peer_remote_as.name" "3491"}}
+🌐 **PCCW Global (AS3491)**
+- APAC Tier-1 backbone
+- NOC: noc@pccwglobal.com
+- Portal: https://www.pccwglobal.com
+Include circuit ID if available.
+{{/is_match}}
+
+{{!-- ZENLAYER --}}
+{{#is_match "dell_os10bgp4_v2_peer_remote_as.name" "21859"}}
+🌐 **Zenlayer (AS21859)**
+- Edge + cloud acceleration
+- Support: https://www.zenlayer.com/about-us/support/
+Provide peer IP + region.
+{{/is_match}}
+
+
+
+━━━━━━━━━━━━━━━━━━
+📌 **Recommended Actions**
+━━━━━━━━━━━━━━━━━━
+• Check BGP: `show ip bgp summary`
+• Validate ICMP reachability
+• Review upstream port drops / errors
+• Ticket ISP if matched above
+
+@slack-Perimeter_81-sre_monitoring
+{{/is_alert}}
+
+{{#is_recovery}}
+✅ **BGP SESSION RECOVERED**
+Peer: **{{dell_os10bgp4_v2_peer_description.name}}**
+ASN: **{{dell_os10bgp4_v2_peer_remote_as.name}}**
+Device: **{{snmp_host.name}}**
+@slack-Perimeter_81-sre_monitoring
+{{/is_recovery}}
