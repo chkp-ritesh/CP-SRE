@@ -1,0 +1,20 @@
+# SRE Squad
+This repo is intended for helpful tools and monitoring to help with operations
+
+## datadog
+- Monitoring
+- Alerting
+- Dashboards
+- Messages
+
+## local
+- zshrc config to speed up daily tasks
+
+## scripts
+
+## github
+- Repo for storing common scripts and configurations
+- Actions for CI/CD pipelines
+
+
+

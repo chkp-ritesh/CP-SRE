@@ -1,0 +1,21 @@
+{
+	"id": 238486433,
+	"name": "🚨 **Investigate DISK READ {{ region.name }} {{vm_name.name}} {{vm_id.name}} ** 🚨",
+	"type": "query alert",
+	"query": "avg(last_30m):max:pve_vm_diskread{region:*} by {vm_name,vm_id,region} > 1000000000",
+	"message": "{{#is_alert}}\n🚨 **{{region.name}}}} Storage Utilization Abuse Detected**🚨 \n\n💾 **DISK READ Exceeds** — check the [Filter by {{region.name}}](https://app.datadoghq.com/dashboard/twb-arm-4eu/proxmox-dc?fromUser=true&refresh_mode=paused&tpl_var_region%5B0%5D={{region.name}}\n\n{{/is_alert}}\n\n{{#is_recovery}}\n✅ **DISK READ Normal {{vm_name.name}} {{vm_id.name}} ** ✅\n{{/is_recovery}}\n\n@slack-sre_monitoring",
+	"tags": [
+		"*"
+	],
+	"options": {
+		"thresholds": {
+			"critical": 1000000000
+		},
+		"notify_audit": false,
+		"threshold_windows": null,
+		"on_missing_data": "default",
+		"include_tags": true,
+		"new_group_delay": 60
+	},
+	"priority": null
+}
