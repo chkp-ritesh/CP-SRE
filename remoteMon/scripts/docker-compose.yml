@@ -1,0 +1,60 @@
+---
+version: "3.0"
+services:
+  grafana:
+    hostname: grafana
+    image: grafana/grafana:master
+    expose:
+      - 3000
+    ports:
+      - 3000:3000
+    volumes:
+      - ./grafana/:/etc/grafana/provisioning/datasources
+
+    #Description: db - postgresql timescaleddb - used for time series and analytics,
+    # for Prometheus in this example
+    # operated by promscale service
+  db:
+    image: timescale/timescaledb-ha:pg12-latest
+    ports:
+      - 5432:5432/tcp
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: postgres
+      TS_TUNE_MEMORY: 500MB
+  #Description: pgadmin - web ui for PostgresSQL, for convenience, if you dont want to interact with db using cli.
+  #Dependencies: Need to manually Login to http://localhost:5050 and connect "db" service using POSTGRES_USER,POSTGRES_PASSWORD
+  pgadmin:
+    container_name: pgadmin4_container
+    image: dpage/pgadmin4:latest
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+      - "5050:80"
+
+    #Description: Prometheus - open source monitoring widely used tool for metrics and alerting
+    #Dependencies: feeded by data from Vector_agg, storing data using promscale service
+    # - http://promscale:9201
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - 9090:9090/tcp
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+  #Description: Promscale - centralized, durable, and reliable storage solution for our Prometheus data
+  #Dependencies: feeded by data from Prometheus, storing data in our Postgress TimescaledDB db.
+  promscale:
+    image: timescale/promscale:latest
+    ports:
+      - 9201:9201/tcp
+    restart: on-failure
+    depends_on:
+      - db
+      - prometheus
+    environment:
+      PROMSCALE_DB_CONNECT_RETRIES: 10
+      PROMSCALE_WEB_TELEMETRY_PATH: /metrics-text
+      PROMSCALE_DB_URI: postgres://postgres:password@db:5432/postgres?sslmode=allow
+
