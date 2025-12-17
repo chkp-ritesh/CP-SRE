@@ -1,0 +1,21 @@
+# QA Readme
+
+- Build Gateways in new region
+- Build a customer "network" -- This is a Virtual machine
+- Build IPSEC / Wireguard / OpenVPN Tunnels
+- Build ZTA for HTTP/HTTPS or SSH/RDP
+- Login to Network with Agent
+- Configure Private DNS
+- Enabled DNS Filtering
+
+
+## Build Gateways in new region
+- Postman --> https://perimeter81.postman.co/workspace/Team-Workspace~b1f327fc-d927-4847-8b01-87a030cf64f5/request/4755113-54b47f37-3c54-4468-abed-bd897aef173c?action=share&creator=44119346&ctx=documentation&active-environment=44119346-5883209c-8888-482d-a20f-9357a309997a
+Required Variables
+- TenantName
+- cpRegion (from mongo under CPRegion)
+- env (perimeter81.com)
+- networkName (whatever)
+- Bearer Token
+
+
