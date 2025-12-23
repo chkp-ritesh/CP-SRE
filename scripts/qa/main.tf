@@ -11,49 +11,49 @@ resource "aws_security_group" "ipsec_sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["131.226.32.118/32","209.35.253.0/24","203.169.7.0/24"]
+    cidr_blocks = ["139.84.143.120/32","209.35.253.0/24","203.169.7.0/24"]
   }
 
   ingress {
     from_port   = 8080
     to_port     = 8080
     protocol    = "tcp"
-    cidr_blocks = ["131.226.32.118/32","209.35.253.0/24","203.169.7.0/24"]
+    cidr_blocks = ["139.84.143.120/32","209.35.253.0/24","203.169.7.0/24"]
   }
 
   ingress {
     from_port   = 8043
     to_port     = 8043
     protocol    = "tcp"
-    cidr_blocks = ["131.226.32.118/32","209.35.253.0/24","203.169.7.0/24"]
+    cidr_blocks = ["139.84.143.120/32","209.35.253.0/24","203.169.7.0/24"]
   }
 
   ingress {
     from_port   = 3389
     to_port     = 3389
     protocol    = "tcp"
-    cidr_blocks = ["131.226.32.118/32","209.35.253.0/24","203.169.7.0/24"]
+    cidr_blocks = ["139.84.143.120/32","209.35.253.0/24","203.169.7.0/24"]
   }
 
   ingress {
     from_port   = 500
     to_port     = 500
     protocol    = "udp"
-    cidr_blocks = ["131.226.32.118/32","209.35.253.0/24","203.169.7.0/24"]
+    cidr_blocks = ["139.84.143.120/32","209.35.253.0/24","203.169.7.0/24"]
   }
 
   ingress {
     from_port   = 4500
     to_port     = 4500
     protocol    = "udp"
-    cidr_blocks = ["131.226.32.118/32","209.35.253.0/24","203.169.7.0/24"]
+    cidr_blocks = ["139.84.143.120/32","209.35.253.0/24","203.169.7.0/24"]
   }
 
   ingress {
     from_port   = 51821
     to_port     = 51821
     protocol    = "udp"
-    cidr_blocks = ["131.226.32.118/32","209.35.253.0/24","203.169.7.0/24"]
+    cidr_blocks = ["139.84.143.120/32","209.35.253.0/24","203.169.7.0/24"]
   }
 
   egress {
@@ -64,10 +64,10 @@ resource "aws_security_group" "ipsec_sg" {
   }
 }
 
-resource "aws_instance" "test_server" {
+resource "aws_instance" "test_server_01" {
   ami           = "ami-0fc5d935ebf8bc3bc"
   instance_type = "t3.micro"
-  key_name      = "loud_2"
+  key_name      = "riteshawskey"
   vpc_security_group_ids = [aws_security_group.ipsec_sg.id]
 
   root_block_device {
@@ -75,34 +75,44 @@ resource "aws_instance" "test_server" {
     volume_size = 8
   }
 
-  user_data = file("init-strongswan.sh")
+  user_data = file("build/init-all.sh")
 
   tags = {
-    Name = "qa-test-server"
-    Owner = "Louis DeVictoria"
+    Name = "qa-test-server01"
+    Owner = "Ritesh Suman"
     Department = "Core"
     Temp = "True"
     keep = "10"
   }
+}
 
-  provisioner "remote-exec" {
-    inline = [
-      "sudo apt-get update",
-      "sudo apt install -y curl strongswan",
-      "sudo systemctl enable --now strongswan-starter",
-      "sudo apt-get install -y dnsmasq"
-    ]
+resource "aws_instance" "test_server_02" {
+  ami           = "ami-0fc5d935ebf8bc3bc"
+  instance_type = "t3.micro"
+  key_name      = "riteshawskey"
+  vpc_security_group_ids = [aws_security_group.ipsec_sg.id]
 
-    connection {
-      type        = "ssh"
-      user        = "ubuntu"
-      private_key = file("~/.ssh/loud_2.pem")
-      host        = self.public_ip
-    }
+  root_block_device {
+    volume_type = "gp3"
+    volume_size = 8
+  }
+
+  user_data = file("build/init-all.sh")
+
+  tags = {
+    Name = "qa-test-server02"
+    Owner = "Ritesh Suman"
+    Department = "Core"
+    Temp = "True"
+    keep = "10"
   }
 }
 
 
-output "test_server_ip" {
-  value = aws_instance.test_server.public_ip
+output "test_server_01_ip" {
+  value = aws_instance.test_server_01.public_ip
+}
+
+output "test_server_02_ip" {
+  value = aws_instance.test_server_02.public_ip
 }
