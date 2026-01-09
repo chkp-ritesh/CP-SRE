@@ -86,33 +86,33 @@ resource "aws_instance" "test_server_01" {
   }
 }
 
-resource "aws_instance" "test_server_02" {
-  ami           = "ami-0fc5d935ebf8bc3bc"
-  instance_type = "t3.micro"
-  key_name      = "riteshawskey"
-  vpc_security_group_ids = [aws_security_group.ipsec_sg.id]
-
-  root_block_device {
-    volume_type = "gp3"
-    volume_size = 8
-  }
-
-  user_data = file("build/init-all.sh")
-
-  tags = {
-    Name = "qa-test-server02"
-    Owner = "Ritesh Suman"
-    Department = "Core"
-    Temp = "True"
-    keep = "10"
-  }
-}
+# resource "aws_instance" "test_server_02" {
+#   ami           = "ami-0fc5d935ebf8bc3bc"
+#   instance_type = "t3.micro"
+#   key_name      = "riteshawskey"
+#   vpc_security_group_ids = [aws_security_group.ipsec_sg.id]
+#
+#   root_block_device {
+#     volume_type = "gp3"
+#     volume_size = 8
+#   }
+#
+#   user_data = file("build/init-all.sh")
+#
+#   tags = {
+#     Name = "qa-test-server02"
+#     Owner = "Ritesh Suman"
+#     Department = "Core"
+#     Temp = "True"
+#     keep = "10"
+#   }
+# }
 
 
 output "test_server_01_ip" {
   value = aws_instance.test_server_01.public_ip
 }
 
-output "test_server_02_ip" {
-  value = aws_instance.test_server_02.public_ip
-}
+# output "test_server_02_ip" {
+#   value = aws_instance.test_server_02.public_ip
+# }
